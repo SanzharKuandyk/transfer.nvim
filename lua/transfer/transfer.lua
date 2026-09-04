@@ -28,7 +28,11 @@ end
 -- @param absolute_path string
 -- @return string
 local function normalize_local_path(absolute_path)
-  local cwd = vim.loop.cwd()
+  local cwd = vim.fn.getcwd()
+  if vim.fn.has("win32") == 1 then
+    cwd = vim.fs.normalize(cwd)
+    absolute_path = vim.fs.normalize(absolute_path)
+  end
   local found, found_end = string.find(absolute_path, cwd, 1, true)
   if found == 1 then
     absolute_path = string.sub(absolute_path, found_end + 1)
